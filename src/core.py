@@ -19,10 +19,10 @@ class Driver:
         self.options = webdriver.ChromeOptions()
         self.options.add_argument("user-agent=%s" % str(ua.random))
         self.options.add_argument("--no-sandbox")
-        # self.options.add_argument('--window-size=1420,1080')
         self.options.add_argument("--headless")
         self.options.add_argument("--disable-dev-shm-usage")
         self.options.add_argument("--disable-gpu")
+        self.options.add_argument("--remote-debugging-port=9222")
         self.default_url = "https://yandex.ru/"
         self.chrome = None
         self.result_list = []
@@ -57,7 +57,8 @@ class Driver:
         self.chrome.find_element_by_xpath('//*[@id="text"]').send_keys(
             "%s\n" % search_query
         )
-        time.sleep(1.5)
+        logger.info('yandex search keyword is %s' % search_query)
+        time.sleep(2.5)
         return self.chrome.page_source
 
     @staticmethod
@@ -76,6 +77,8 @@ class Driver:
             logger.error(
                 "Some error with parsing page %s" % (str(e) + traceback.format_exc())
             )
+            with open('test.html', 'w') as f:
+                f.write(html)
         return temp_list
 
     @get_work_time
@@ -110,7 +113,7 @@ class Driver:
     @staticmethod
     def scroll_page(html):
         html.send_keys(Keys.ESCAPE)
-        for _ in range(50):
+        for _ in range(40):
             html.send_keys(Keys.ARROW_DOWN)
             time.sleep(0.05)
         for _ in range(6):
