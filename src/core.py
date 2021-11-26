@@ -49,7 +49,7 @@ class Driver:
         try:
             self._quit_driver_and_reap_children()
         except (InvalidSessionIdException, WebDriverException) as e:
-            logger.error("close driver was broken")
+            logger.error("closed driver was broken")
 
     def _get_urls_from_main_page(self, search_query: str) -> str:
         self.chrome.get(self.default_url)
@@ -110,13 +110,14 @@ class Driver:
     @staticmethod
     def scroll_page(html):
         html.send_keys(Keys.ESCAPE)
-        for _ in range(100):
+        for _ in range(50):
             html.send_keys(Keys.ARROW_DOWN)
             time.sleep(0.05)
         for _ in range(6):
             html.send_keys(Keys.PAGE_UP)
             time.sleep(0.1)
 
+    @get_work_time
     def imitation_actions(self, url: str):
         self.action = ActionChains(self.chrome)
         try:
