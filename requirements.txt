@@ -38,7 +38,6 @@ passlib==1.7.4
 pathspec==0.9.0
 platformdirs==2.4.0
 protobuf==3.18.1
-psycopg2==2.9.2
 psycopg2-binary==2.9.2
 publicsuffix2==2.20191221
 pyasn1==0.4.8
