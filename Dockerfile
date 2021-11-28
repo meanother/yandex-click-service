@@ -36,6 +36,7 @@ RUN set -ex \
         /usr/share/doc \
         /usr/share/doc-base
 
+EXPOSE 9222
 ENV APP_HOME /app
 WORKDIR ${APP_HOME}
 COPY . ${APP_HOME}

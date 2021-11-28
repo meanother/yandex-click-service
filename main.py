@@ -29,6 +29,7 @@ tt = [
 while True:
     try:
         driver = Driver()
+        # driver.options.add_argument("--proxy-server=%s" % "http://localhost:8080")
         driver.test_run(tt)
 
         tor = Driver()
