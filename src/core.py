@@ -5,6 +5,8 @@ import traceback
 
 import psycopg2
 import requests
+import undetected_chromedriver.v2 as uc
+# from undetected_chromedriver.re
 from bs4 import BeautifulSoup as bs
 from selenium import webdriver
 from selenium.common.exceptions import InvalidSessionIdException, WebDriverException
@@ -19,6 +21,7 @@ class Driver:
         self.options = webdriver.ChromeOptions()
         self.options.add_argument("user-agent=%s" % str(ua.random))
         self.options.add_argument("--no-sandbox")
+        self.options.add_argument('--window-size=1920,1080')
         self.options.add_argument("--headless")
         self.options.add_argument("--disable-dev-shm-usage")
         self.options.add_argument("--disable-gpu")
@@ -29,7 +32,7 @@ class Driver:
         self.action = None
 
     def _initialize(self) -> None:
-        self.chrome = webdriver.Chrome(options=self.options)
+        self.chrome = uc.Chrome(options=self.options)
         self.chrome.implicitly_wait(120)
         time.sleep(2)
 
