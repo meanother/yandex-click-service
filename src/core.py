@@ -18,7 +18,7 @@ from src.utils import get_work_time, logger, ua
 
 class Driver:
     def __init__(self):
-        self.options = webdriver.ChromeOptions()
+        self.options = uc.ChromeOptions()
         self.options.add_argument("user-agent=%s" % str(ua.random))
         self.options.add_argument("--no-sandbox")
         self.options.add_argument('--window-size=1920,1080')
