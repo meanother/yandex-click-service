@@ -63,7 +63,7 @@ tornado==6.1
 trio==0.19.0
 trio-websocket==0.9.2
 typing_extensions==4.0.0
-undetected-chromedriver==1.4.0
+undetected-chromedriver
 urllib3==1.26.7
 urwid==2.1.2
 Werkzeug==2.0.2
