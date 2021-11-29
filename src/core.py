@@ -1,27 +1,26 @@
 import os
 import random
+import re
 import time
 import traceback
 
 import psycopg2
 import requests
 import undetected_chromedriver.v2 as uc
-# from undetected_chromedriver.re
 from bs4 import BeautifulSoup as bs
 from selenium import webdriver
 from selenium.common.exceptions import InvalidSessionIdException, WebDriverException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
-from src.utils import get_work_time, logger, ua
+from src.utils import get_work_time, logger, ua_list
 
 
 class Driver:
     def __init__(self):
         self.options = uc.ChromeOptions()
-        self.options.add_argument("user-agent=%s" % str(ua.random))
-        self.options.add_argument("--no-sandbox")
-        self.options.add_argument('--window-size=1920,1080')
+        self.options.add_argument("user-agent=%s" % random.choice(ua_list))
+        self.options.add_argument("--window-size=1920,1080")
         self.options.add_argument("--headless")
         self.options.add_argument("--disable-dev-shm-usage")
         self.options.add_argument("--disable-gpu")
@@ -50,9 +49,10 @@ class Driver:
 
     def _close(self) -> None:
         try:
+            logger.warning("Prepare to close driver")
             self._quit_driver_and_reap_children()
         except (InvalidSessionIdException, WebDriverException) as e:
-            logger.error("closed driver was broken")
+            logger.error("closed driver was broken %s" % e)
 
     def _get_urls_from_main_page(self, search_query: str) -> str:
         self.chrome.get(self.default_url)
@@ -60,7 +60,7 @@ class Driver:
         self.chrome.find_element_by_xpath('//*[@id="text"]').send_keys(
             "%s\n" % search_query
         )
-        logger.info('yandex search keyword is %s' % search_query)
+        logger.info("yandex search keyword is %s" % search_query)
         time.sleep(2.5)
         return self.chrome.page_source
 
@@ -80,7 +80,7 @@ class Driver:
             logger.error(
                 "Some error with parsing page %s" % (str(e) + traceback.format_exc())
             )
-            with open('test.html', 'w') as f:
+            with open("test.html", "w") as f:
                 f.write(html)
         return temp_list
 
@@ -124,12 +124,25 @@ class Driver:
             html.send_keys(Keys.PAGE_UP)
             time.sleep(0.1)
 
+    @staticmethod
+    def get_domain(url: str):
+        try:
+            domain = re.search(
+                r"(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]",
+                url,
+            )
+            return domain.group()
+        except Exception as e:
+            logger.error(e)
+            return "-"
+
     @get_work_time
     def imitation_actions(self, url: str):
         self.action = ActionChains(self.chrome)
         try:
             self.chrome.get(url)
             logger.info("Page title: %s" % self.chrome.title)
+            logger.info("Page URL: %s" % self.get_domain(self.chrome.current_url))
             if (
                 "yandex.ru/uslugi/" not in self.chrome.current_url
                 and "docs.google.com/forms/" not in self.chrome.current_url

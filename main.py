@@ -25,16 +25,20 @@ tt = [
     "Банкротство физических лиц цена Наро-Фоминск",
 ]
 
+test = [
+    "Банкротство физических лиц в Обнинске",
+    # "Банкротство физических лиц 2021 Обнинск",
+]
 
-while True:
-    try:
-        driver = Driver()
-        # driver.options.add_argument("--proxy-server=%s" % "http://localhost:8080")
-        driver.test_run(tt)
 
-        tor = Driver()
-        tor.options.add_argument("--proxy-server=%s" % "socks5://localhost:9050")
-        tor.run_imitation(driver.result_list)
-    except Exception as e:
-        logger.error("Some error in WHILE TRUE:")
-        logger.error(str(e) + traceback.format_exc())
+try:
+    driver = Driver()
+    # driver.options.add_argument("--proxy-server=%s" % "http://localhost:8080")
+    driver.test_run(tt)
+
+    tor = Driver()
+    tor.options.add_argument("--proxy-server=%s" % "socks5://localhost:9050")
+    tor.run_imitation(driver.result_list)
+except Exception as e:
+    logger.error("Some error in WHILE TRUE:")
+    logger.error(str(e) + traceback.format_exc())
