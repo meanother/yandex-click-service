@@ -91,6 +91,7 @@ class Driver:
             data = self._get_urls_from_main_page(query)
             raw_array = self._parse_data_from_main_page(data)
             self.filter_lst(raw_array)
+            time.sleep(3.5)
         self._close()
 
     def clean_only_yandex_yabs(self, lst: list):
@@ -109,7 +110,7 @@ class Driver:
     def move_cursor_with_driver(self, item):
         try:
             self.action.move_to_element(item).perform()
-            time.sleep(0.25)
+            time.sleep(0.15)
         except Exception as e:
             pass
 
