@@ -6,7 +6,7 @@ import traceback
 
 import undetected_chromedriver.v2 as uc
 from bs4 import BeautifulSoup as bs
-from selenium.common.exceptions import InvalidSessionIdException, WebDriverException
+from selenium.common.exceptions import InvalidSessionIdException, WebDriverException, StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
@@ -115,13 +115,16 @@ class Driver:
 
     @staticmethod
     def scroll_page(html):
-        html.send_keys(Keys.ESCAPE)
-        for _ in range(40):
-            html.send_keys(Keys.ARROW_DOWN)
-            time.sleep(0.05)
-        for _ in range(6):
-            html.send_keys(Keys.PAGE_UP)
-            time.sleep(0.1)
+        try:
+            html.send_keys(Keys.ESCAPE)
+            for _ in range(40):
+                html.send_keys(Keys.ARROW_DOWN)
+                time.sleep(0.05)
+            for _ in range(6):
+                html.send_keys(Keys.PAGE_UP)
+                time.sleep(0.1)
+        except StaleElementReferenceException:
+            pass
 
     @staticmethod
     def get_domain(url: str):
