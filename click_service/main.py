@@ -37,7 +37,7 @@ try:
     driver.test_run(tt)
 
     tor = Driver()
-    tor.options.add_argument("--proxy-server=%s" % "socks5://localhost:9050")
+    tor.options.add_argument("--proxy-server=%s" % "socks5://tor:9050")
     tor.run_imitation(driver.result_list)
 except Exception as e:
     logger.error("Some error in WHILE TRUE:")

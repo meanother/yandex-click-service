@@ -1,0 +1,5 @@
+SocksPort 0.0.0.0:9050
+CircuitBuildTimeout 10
+LearnCircuitBuildTimeout 0
+MaxCircuitDirtiness 1
+ExitNodes {ru}

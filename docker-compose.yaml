@@ -1,0 +1,28 @@
+version: '3'
+services:
+  tor:
+    image: tor:0.1
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - tor_network
+    ports:
+      - 9050:9050
+
+  bot1:
+    image: test-bot:0.1
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    networks:
+      - tor_network
+    depends_on:
+      - tor
+
+networks:
+  tor_network:
+    external:
+      name: tor_network

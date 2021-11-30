@@ -41,7 +41,7 @@ __pycache__
 .python-version
 
 
-src/config.py
+click_service/src/config.py
 
 *.db
 test.*

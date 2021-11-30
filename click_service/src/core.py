@@ -4,11 +4,8 @@ import re
 import time
 import traceback
 
-import psycopg2
-import requests
 import undetected_chromedriver.v2 as uc
 from bs4 import BeautifulSoup as bs
-from selenium import webdriver
 from selenium.common.exceptions import InvalidSessionIdException, WebDriverException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
@@ -31,6 +28,7 @@ class Driver:
         self.action = None
 
     def _initialize(self) -> None:
+        # self.chrome = uc.Chrome(options=self.options, version_main=86)
         self.chrome = uc.Chrome(options=self.options)
         self.chrome.implicitly_wait(120)
         time.sleep(2)
@@ -50,7 +48,8 @@ class Driver:
     def _close(self) -> None:
         try:
             logger.warning("Prepare to close driver")
-            self._quit_driver_and_reap_children()
+            self.chrome.quit()
+            # self._quit_driver_and_reap_children()
         except (InvalidSessionIdException, WebDriverException) as e:
             logger.error("closed driver was broken %s" % e)
 
