@@ -103,8 +103,8 @@ class Driver:
         self.result_list.append("https://artydev.ru/posts/bankiru-analytics/")
 
     def filter_lst(self, lst: list):
-        temp_list = [i for i in lst if "fl-bankrotstvo.ru" not in i.find("div").text]
-        self.clean_only_yandex_yabs(temp_list)
+        # temp_list = [i for i in lst if "fl-bankrotstvo.ru" not in i.find("div").text]
+        self.clean_only_yandex_yabs(lst)
 
     def move_cursor_with_driver(self, item):
         try:
@@ -122,7 +122,7 @@ class Driver:
                 time.sleep(0.05)
             for _ in range(6):
                 html.send_keys(Keys.PAGE_UP)
-                time.sleep(0.1)
+                time.sleep(0.15)
         except (StaleElementReferenceException, ElementNotInteractableException):
             pass
 
@@ -160,7 +160,7 @@ class Driver:
 
                     self.scroll_page(page)
                     random.shuffle(page_elements)
-                    for element in page_elements[:15]:
+                    for element in page_elements[:30]:
                         self.move_cursor_with_driver(element)
         except InvalidSessionIdException as e:
             logger.error(
