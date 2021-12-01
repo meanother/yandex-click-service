@@ -6,7 +6,7 @@ import traceback
 
 import undetected_chromedriver.v2 as uc
 from bs4 import BeautifulSoup as bs
-from selenium.common.exceptions import InvalidSessionIdException, WebDriverException, StaleElementReferenceException
+from selenium.common.exceptions import InvalidSessionIdException, WebDriverException, StaleElementReferenceException, ElementNotInteractableException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
@@ -123,7 +123,7 @@ class Driver:
             for _ in range(6):
                 html.send_keys(Keys.PAGE_UP)
                 time.sleep(0.1)
-        except StaleElementReferenceException:
+        except (StaleElementReferenceException, ElementNotInteractableException):
             pass
 
     @staticmethod
