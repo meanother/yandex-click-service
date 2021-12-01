@@ -29,7 +29,13 @@ class Driver:
 
     def _initialize(self) -> None:
         # self.chrome = uc.Chrome(options=self.options, version_main=86)
+        params = {
+            "latitude": 55.0968,
+            "longitude": 36.6101,
+            "accuracy": 100
+        }
         self.chrome = uc.Chrome(options=self.options)
+        self.chrome.execute_cdp_cmd("Page.setGeolocationOverride", params)
         self.chrome.implicitly_wait(120)
         time.sleep(2)
 
@@ -98,9 +104,9 @@ class Driver:
             if "yabs.yandex.ru" in item.find("div").find("a").get("href"):
                 url = item.find("div").find("a").get("href")
                 self.result_list.append(url)
-        self.result_list.append("https://finvestpaper.ru/main/statistics/")
-        self.result_list.append("https://artydev.ru/")
-        self.result_list.append("https://artydev.ru/posts/bankiru-analytics/")
+        # self.result_list.append("https://finvestpaper.ru/main/statistics/")
+        # self.result_list.append("https://artydev.ru/")
+        # self.result_list.append("https://artydev.ru/posts/bankiru-analytics/")
 
     def filter_lst(self, lst: list):
         # temp_list = [i for i in lst if "fl-bankrotstvo.ru" not in i.find("div").text]
@@ -170,6 +176,9 @@ class Driver:
     @get_work_time
     def run_imitation(self, urls: list):
         self._initialize()
+        urls.append("https://finvestpaper.ru/main/statistics/")
+        urls.append("https://artydev.ru/")
+        urls.append("https://artydev.ru/posts/bankiru-analytics/")
         for url in urls:
             logger.info("Imitation actions in %s" % url)
             self.imitation_actions(url)
