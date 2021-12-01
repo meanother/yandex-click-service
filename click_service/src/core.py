@@ -65,17 +65,14 @@ class Driver:
             logger.error("closed driver was broken %s" % e)
 
     def _get_urls_from_main_page(self, search_query: str) -> str:
-        try:
-            self.chrome.get(self.default_url)
-            time.sleep(2)
-            self.chrome.find_element_by_xpath('//*[@id="text"]').send_keys(
-                "%s\n" % search_query
-            )
-            logger.info("yandex search keyword is %s" % search_query)
-            time.sleep(2.5)
-            return self.chrome.page_source
-        except AttributeError:
-            return '-'
+        self.chrome.get(self.default_url)
+        time.sleep(2)
+        self.chrome.find_element_by_xpath('//*[@id="text"]').send_keys(
+            "%s\n" % search_query
+        )
+        logger.info("yandex search keyword is %s" % search_query)
+        time.sleep(2.5)
+        return self.chrome.page_source
 
     @staticmethod
     def _parse_data_from_main_page(html: str) -> list:
@@ -89,7 +86,7 @@ class Driver:
                     and element.find("div", class_="organic__url-text") is not None
                 ):
                     temp_list.append(element)
-        except Exception as e:
+        except AttributeError as e:
             logger.error(
                 "Some error with parsing page %s" % (str(e) + traceback.format_exc())
             )
@@ -102,12 +99,9 @@ class Driver:
         self._initialize()
         for query in keywords:
             data = self._get_urls_from_main_page(query)
-            if data != '-':
-                raw_array = self._parse_data_from_main_page(data)
-                self.filter_lst(raw_array)
-                time.sleep(3.5)
-            else:
-                logger.error('Smth wrong with parse yandex-page, captcha!')
+            raw_array = self._parse_data_from_main_page(data)
+            self.filter_lst(raw_array)
+            time.sleep(3.5)
         self._close()
 
     def clean_only_yandex_yabs(self, lst: list):
