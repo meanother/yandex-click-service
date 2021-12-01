@@ -109,8 +109,8 @@ class Driver:
         # self.result_list.append("https://artydev.ru/posts/bankiru-analytics/")
 
     def filter_lst(self, lst: list):
-        # temp_list = [i for i in lst if "fl-bankrotstvo.ru" not in i.find("div").text]
-        self.clean_only_yandex_yabs(lst)
+        temp_list = [i for i in lst if "fl-bankrotstvo.ru" not in i.find("div").text]
+        self.clean_only_yandex_yabs(temp_list)
 
     def move_cursor_with_driver(self, item):
         try:
