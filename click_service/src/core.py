@@ -48,6 +48,11 @@ class Driver:
             while pid:
                 pid = os.waitpid(-1, os.WNOHANG)
                 logger.warning("Reaped child: %s" % str(pid))
+                try:
+                    if pid[0] == 0:
+                        pid = False
+                except Exception as e:
+                    logger.error('Out of loop with reaped child process %s' % e)
         except ChildProcessError:
             pass
 
@@ -55,7 +60,7 @@ class Driver:
         try:
             logger.warning("Prepare to close driver")
             self.chrome.quit()
-            # self._quit_driver_and_reap_children()
+            self._quit_driver_and_reap_children()
         except (InvalidSessionIdException, WebDriverException) as e:
             logger.error("closed driver was broken %s" % e)
 
