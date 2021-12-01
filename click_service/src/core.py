@@ -65,14 +65,17 @@ class Driver:
             logger.error("closed driver was broken %s" % e)
 
     def _get_urls_from_main_page(self, search_query: str) -> str:
-        self.chrome.get(self.default_url)
-        time.sleep(2)
-        self.chrome.find_element_by_xpath('//*[@id="text"]').send_keys(
-            "%s\n" % search_query
-        )
-        logger.info("yandex search keyword is %s" % search_query)
-        time.sleep(2.5)
-        return self.chrome.page_source
+        try:
+            self.chrome.get(self.default_url)
+            time.sleep(2)
+            self.chrome.find_element_by_xpath('//*[@id="text"]').send_keys(
+                "%s\n" % search_query
+            )
+            logger.info("yandex search keyword is %s" % search_query)
+            time.sleep(2.5)
+            return self.chrome.page_source
+        except AttributeError:
+            return '-'
 
     @staticmethod
     def _parse_data_from_main_page(html: str) -> list:
@@ -99,9 +102,12 @@ class Driver:
         self._initialize()
         for query in keywords:
             data = self._get_urls_from_main_page(query)
-            raw_array = self._parse_data_from_main_page(data)
-            self.filter_lst(raw_array)
-            time.sleep(3.5)
+            if data != '-':
+                raw_array = self._parse_data_from_main_page(data)
+                self.filter_lst(raw_array)
+                time.sleep(3.5)
+            else:
+                logger.error('Smth wrong with parse yandex-page, captcha!')
         self._close()
 
     def clean_only_yandex_yabs(self, lst: list):
