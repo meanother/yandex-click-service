@@ -6,7 +6,13 @@ import traceback
 
 import undetected_chromedriver.v2 as uc
 from bs4 import BeautifulSoup as bs
-from selenium.common.exceptions import InvalidSessionIdException, WebDriverException, StaleElementReferenceException, ElementNotInteractableException
+import psutil
+from selenium.common.exceptions import (
+    InvalidSessionIdException,
+    WebDriverException,
+    StaleElementReferenceException,
+    ElementNotInteractableException,
+)
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
@@ -29,11 +35,7 @@ class Driver:
 
     def _initialize(self) -> None:
         # self.chrome = uc.Chrome(options=self.options, version_main=86)
-        params = {
-            "latitude": 55.0968,
-            "longitude": 36.6101,
-            "accuracy": 100
-        }
+        params = {"latitude": 55.0968, "longitude": 36.6101, "accuracy": 100}
         self.chrome = uc.Chrome(options=self.options)
         self.chrome.execute_cdp_cmd("Page.setGeolocationOverride", params)
         self.chrome.implicitly_wait(120)
@@ -52,15 +54,30 @@ class Driver:
                     if pid[0] == 0:
                         pid = False
                 except Exception as e:
-                    logger.error('Out of loop with reaped child process %s' % e)
+                    logger.error("Out of loop with reaped child process %s" % e)
         except ChildProcessError:
             pass
+
+    @staticmethod
+    def _manual_kill_sleeping_process():
+        logger.info("Manual kill sleeping process")
+        for proc in psutil.process_iter():
+            if proc.name().lower() == "chrome" and proc.status() == "sleeping":
+                try:
+                    logger.warning("Manual kill sleeping process: %s" % str(proc.pid))
+                    proc.kill()
+                except Exception as e:
+                    logger.error(
+                        "Cant kill sleeping process %s \n %s"
+                        % (str(proc.pid), (str(e) + traceback.format_exc()))
+                    )
 
     def _close(self) -> None:
         try:
             logger.warning("Prepare to close driver")
             self.chrome.quit()
             self._quit_driver_and_reap_children()
+            self._manual_kill_sleeping_process()
         except (InvalidSessionIdException, WebDriverException) as e:
             logger.error("closed driver was broken %s" % e)
 
@@ -109,9 +126,6 @@ class Driver:
             if "yabs.yandex.ru" in item.find("div").find("a").get("href"):
                 url = item.find("div").find("a").get("href")
                 self.result_list.append(url)
-        # self.result_list.append("https://finvestpaper.ru/main/statistics/")
-        # self.result_list.append("https://artydev.ru/")
-        # self.result_list.append("https://artydev.ru/posts/bankiru-analytics/")
 
     def filter_lst(self, lst: list):
         temp_list = [i for i in lst if "fl-bankrotstvo.ru" not in i.find("div").text]
@@ -120,7 +134,7 @@ class Driver:
     def move_cursor_with_driver(self, item):
         try:
             self.action.move_to_element(item).perform()
-            time.sleep(0.15)
+            time.sleep(0.75)
         except Exception as e:
             pass
 
@@ -133,7 +147,7 @@ class Driver:
                 time.sleep(0.05)
             for _ in range(6):
                 html.send_keys(Keys.PAGE_UP)
-                time.sleep(0.15)
+                time.sleep(1.15)
         except (StaleElementReferenceException, ElementNotInteractableException):
             pass
 

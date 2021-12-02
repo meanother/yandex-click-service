@@ -64,6 +64,7 @@ trio==0.19.0
 trio-websocket==0.9.2
 typing_extensions==4.0.0
 undetected-chromedriver
+psutil
 urllib3==1.26.7
 urwid==2.1.2
 Werkzeug==2.0.2
