@@ -42,6 +42,7 @@ while True:
     except Exception as e:
         logger.error("Some error in WHILE TRUE:")
         logger.error(str(e) + traceback.format_exc())
+    finally:
         try:
             driver.chrome._close()
         except:
