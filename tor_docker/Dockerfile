@@ -1,6 +1,8 @@
 FROM alpine:latest
 
-RUN apk update && apk add tor obfs4proxy
+RUN apk update && apk add tor go git ca-certificates \
+    && go get git.torproject.org/pluggable-transports/obfs4.git/obfs4proxy \
+    && mv /go/bin/obfs4proxy /usr/bin/obfs4proxy
 
 COPY torrc /etc/tor/torrc
 RUN chown -R tor /etc/tor
