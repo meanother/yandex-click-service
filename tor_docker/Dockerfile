@@ -7,7 +7,7 @@ RUN apk update && apk add tor go git ca-certificates \
 ENV GOPATH /go
 ENV PATH /go/bin:$PATH
 
-RUN go get git.torproject.org/pluggable-transports/obfs4.git/obfs4proxy \
+RUN go get gitlab.com/yawning/obfs4.git \
     && mv /go/bin/obfs4proxy /usr/bin/obfs4proxy
 
 COPY torrc /etc/tor/torrc
